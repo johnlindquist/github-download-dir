@@ -49,11 +49,12 @@ export default async (req, res) => {
         name: file.path,
       })
 
-      console.log(`Appended: ${file.path}`)
+      // console.log(`Appended: ${file.path}`)
     }
 
     archive.finalize()
 
+    console.log(`After finalize`)
     await new Promise(r => {
       setTimeout(() => {
         r()
