@@ -9,9 +9,9 @@ export default async (req, res) => {
     const [user, repo, tree, branch, ...dir] =
       req.query.slug
 
-    const zipUrl = `https://github.com/${user}/${repo}/archive/refs/heads/${branch}.zip`
-    console.log(`Downloading: ${zipUrl}`)
-    const zip = await download(zipUrl)
+    const zip = await download(
+      `https://github.com/${user}/${repo}/archive/refs/heads/${branch}.zip`
+    )
 
     const directory = await unzipper.Open.buffer(zip)
     const path = `${repo}-${branch}/${dir.join("/")}`

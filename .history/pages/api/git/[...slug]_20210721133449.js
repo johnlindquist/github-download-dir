@@ -10,7 +10,6 @@ export default async (req, res) => {
       req.query.slug
 
     const zipUrl = `https://github.com/${user}/${repo}/archive/refs/heads/${branch}.zip`
-    console.log(`Downloading: ${zipUrl}`)
     const zip = await download(zipUrl)
 
     const directory = await unzipper.Open.buffer(zip)
