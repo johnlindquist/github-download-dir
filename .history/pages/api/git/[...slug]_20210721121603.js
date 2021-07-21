@@ -38,5 +38,5 @@ export default async (req, res) => {
   res.setHeader("Content-Type", "application/octet-stream")
   res.send(archive)
 
-  //test: http://localhost:3001/api/git/wesbos/beginner-javascript/tree/master/exercises
+  //test: http://localhost:3000/api/git/wesbos/beginner-javascript/tree/master/exercises
 }
