@@ -53,6 +53,12 @@ export default async (req, res) => {
     }
 
     archive.finalize()
+
+    await new Promise(r => {
+      setTimeout(() => {
+        r()
+      }, 60000)
+    })
   } catch (error) {
     console.log(error)
     res.json(error)
