@@ -24,13 +24,19 @@ export default async (req, res) => {
     })
 
     for await (const file of files) {
-      console.log(`Adding ${file.path}`)
-      archive.append(await file.buffer(), {
+      const buffer = await file.buffer()
+      archive.append(buffer, {
         name: file.path,
       })
+
+      console.log(`Appended: ${file.path}`)
     }
 
+    console.log(`Before finalize`)
+
     await archive.finalize()
+
+    console.log(`After finalize`)
 
     const zipName = `${user}-${repo}-${branch}-${dir.join(
       "-"
