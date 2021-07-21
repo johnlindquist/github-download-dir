@@ -4,7 +4,7 @@ import unzipper from "unzipper"
 import archiver from "archiver"
 
 export default async (req, res) => {
-  console.log(`Starting with ${req.query}`)
+  console.log(`Starting with ${req.query.slug}`)
   try {
     const [user, repo, tree, branch, ...dir] =
       req.query.slug
@@ -13,34 +13,23 @@ export default async (req, res) => {
     console.log(`Downloading: ${zipUrl}`)
     const zip = await download(zipUrl)
 
-    const directory = await unzipper.Open.buffer(zip)
-    const path = `${repo}-${branch}/${dir.join("/")}`
-    const files = directory.files.filter(d =>
-      d.path.startsWith(path)
-    )
-
-    const archive = archiver("zip", {
-      zlib: { level: 9 }, // Sets the compression level.
-    })
-
-    for await (const file of files) {
-      const buffer = await file.buffer()
-      archive.append(buffer, {
-        name: file.path,
-      })
-
-      console.log(`Appended: ${file.path}`)
-    }
-
-    console.log(`Before finalize`)
-
-    await archive.finalize()
-
-    console.log(`After finalize`)
-
     const zipName = `${user}-${repo}-${branch}-${dir.join(
       "-"
     )}.zip`
+
+    const directory = await unzipper.Open.buffer(zip)
+    const path = `${repo}-${branch}/${dir.join("/")}`
+    const files = directory.files.filter(
+      d => d.path.startsWith(path) && !d.path.endsWith("/")
+    )
+
+    console.log(files.length)
+
+    const archive = archiver("zip", {
+      zlib: {
+        level: 9,
+      },
+    })
 
     res.statusCode = 200
     res.setHeader(
@@ -51,12 +40,24 @@ export default async (req, res) => {
       "Content-Type",
       "application/octet-stream"
     )
-    console.log(`Sending ${zipName} as archive`)
-    res.send(archive)
+
+    archive.pipe(res)
+
+    for await (const file of files) {
+      const buffer = await file.buffer()
+      archive.append(buffer, {
+        name: file.path,
+      })
+
+      console.log(`Appended: ${file.path}`)
+    }
+
+    archive.finalize()
   } catch (error) {
     console.log(error)
     res.json(error)
   }
 
   //test: http://localhost:3001/api/git/wesbos/beginner-javascript/tree/master/exercises
+  //test: https://github-download-dir.vercel.app/api/git/wesbos/beginner-javascript/tree/master/exercises
 }
