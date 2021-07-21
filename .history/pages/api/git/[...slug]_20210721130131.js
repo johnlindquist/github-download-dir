@@ -30,25 +30,21 @@ export default async (req, res) => {
       })
     }
 
-    await archive.finalize()
-
-    const zipName = `${user}-${repo}-${branch}-${dir.join(
-      "-"
-    )}.zip`
+    archive.finalize()
 
     res.statusCode = 200
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename=${zipName}`
+      `attachment; filename=${user}-${repo}-${branch}-${dir.join(
+        "-"
+      )}.zip`
     )
     res.setHeader(
       "Content-Type",
       "application/octet-stream"
     )
-    console.log(`Sending ${zipName} as archive`)
     res.send(archive)
   } catch (error) {
-    console.log(error)
     res.json(error)
   }
 

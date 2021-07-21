@@ -30,7 +30,7 @@ export default async (req, res) => {
       })
     }
 
-    await archive.finalize()
+    archive.finalize()
 
     const zipName = `${user}-${repo}-${branch}-${dir.join(
       "-"

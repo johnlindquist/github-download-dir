@@ -5,14 +5,12 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <p>
-        Replace "https://github.com" with
-        "https://github-download-dir.vercel.app/api/git"
-      </p>
-      <p>
+        Replace link to dir
         `https://github.com/jquery/jquery/tree/main/build`
       </p>
-      <p>becomes</p>
+      <p>with</p>
       <p>
+        Replace
         `https://github-download-dir.vercel.app/api/git/jquery/jquery/tree/main/build`
       </p>
     </div>
