@@ -23,8 +23,6 @@ export default async (req, res) => {
       d => d.path.startsWith(path) && !d.path.endsWith("/")
     )
 
-    console.log(files.length)
-
     const archive = archiver("zip", {
       zlib: {
         level: 9,
@@ -48,13 +46,10 @@ export default async (req, res) => {
       archive.append(buffer, {
         name: file.path,
       })
-
-      // console.log(`Appended: ${file.path}`)
     }
 
     archive.finalize()
 
-    console.log(`After finalize`)
     await new Promise(r => {
       setTimeout(() => {
         r()
@@ -64,7 +59,4 @@ export default async (req, res) => {
     console.log(error)
     res.json(error)
   }
-
-  //test: http://localhost:3001/api/git/wesbos/beginner-javascript/tree/master/exercises
-  //test: https://github-download-dir.vercel.app/api/git/wesbos/beginner-javascript/tree/master/exercises
 }
