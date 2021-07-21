@@ -5,7 +5,8 @@ import archiver from "archiver"
 
 export default async (req, res) => {
   console.log(req.query)
-  const [user, repo, tree, branch, ...dir] = req.query.slug
+  const branch = req.query.slug.pop()
+  const [user, repo, ...dir] = req.query.slug
 
   const zip = await download(
     `https://github.com/${user}/${repo}/archive/refs/heads/${branch}.zip`
